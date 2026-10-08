@@ -10,6 +10,10 @@ from shapely.geometry import shape as to_shape
 def _find_member(names, suffix):
     suffix = suffix.lower()
     for name in names:
+        # skip macOS zip junk: __MACOSX/ dirs and ._ AppleDouble shadow files
+        basename = name.rsplit("/", 1)[-1]
+        if name.startswith("__MACOSX/") or basename.startswith("._"):
+            continue
         if name.lower().endswith(suffix):
             return name
     return None

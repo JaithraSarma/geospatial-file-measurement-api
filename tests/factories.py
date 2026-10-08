@@ -10,12 +10,24 @@ WGS84_WKT = (
 )
 
 
-def make_shapefile_zip(shape_type=shapefile.POLYGON, records=None, prj_wkt=WGS84_WKT):
+def make_shapefile_zip(
+    shape_type=shapefile.POLYGON,
+    records=None,
+    prj_wkt=WGS84_WKT,
+    folder="",
+    basename="data",
+    exts=(".shp", ".shx", ".dbf", ".prj"),
+    extra_members=None,
+):
     """Build a zipped shapefile in memory and return the zip bytes.
 
     records is a list of (coords, field_values) tuples. coords is whatever
     pyshp wants for the given shape_type (a ring for polygon, a line for
     polyline, an (x, y) tuple for point).
+
+    folder lets the member paths live inside a subfolder (e.g. "shp_data/"),
+    and exts lets the caller use mixed-case extensions. extra_members is a
+    dict of name -> bytes for injecting junk entries like macOS __MACOSX/.
     """
     if records is None:
         records = []
@@ -36,13 +48,17 @@ def make_shapefile_zip(shape_type=shapefile.POLYGON, records=None, prj_wkt=WGS84
 
     writer.close()
 
+    shp_ext, shx_ext, dbf_ext, prj_ext = exts
     zip_buf = io.BytesIO()
     with zipfile.ZipFile(zip_buf, "w") as zf:
-        zf.writestr("data.shp", shp.getvalue())
-        zf.writestr("data.shx", shx.getvalue())
-        zf.writestr("data.dbf", dbf.getvalue())
+        zf.writestr(f"{folder}{basename}{shp_ext}", shp.getvalue())
+        zf.writestr(f"{folder}{basename}{shx_ext}", shx.getvalue())
+        zf.writestr(f"{folder}{basename}{dbf_ext}", dbf.getvalue())
         if prj_wkt is not None:
-            zf.writestr("data.prj", prj_wkt)
+            zf.writestr(f"{folder}{basename}{prj_ext}", prj_wkt)
+        if extra_members:
+            for name, content in extra_members.items():
+                zf.writestr(name, content)
 
     return zip_buf.getvalue()
 
@@ -93,6 +109,36 @@ def make_kml_bytes():
     </Placemark>
     <Placemark>
       <name>no-geom</name>
+    </Placemark>
+  </Document>
+</kml>
+"""
+    return kml.encode("utf-8")
+
+
+def make_kml_with_hole_bytes():
+    """A single Placemark Polygon with an outer ring and one interior ring (hole)."""
+    kml = """<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <Placemark>
+      <name>field-with-hole</name>
+      <Polygon>
+        <outerBoundaryIs>
+          <LinearRing>
+            <coordinates>
+              0,0,0 0,10,0 10,10,0 10,0,0 0,0,0
+            </coordinates>
+          </LinearRing>
+        </outerBoundaryIs>
+        <innerBoundaryIs>
+          <LinearRing>
+            <coordinates>
+              2,2,0 2,4,0 4,4,0 4,2,0 2,2,0
+            </coordinates>
+          </LinearRing>
+        </innerBoundaryIs>
+      </Polygon>
     </Placemark>
   </Document>
 </kml>

@@ -88,7 +88,9 @@ def read(data):
     if isinstance(data, str):
         data = data.encode("utf-8")
 
-    root = etree.fromstring(data)
+    # data comes straight from an upload, so disable entity/DTD loading to block XXE
+    parser = etree.XMLParser(resolve_entities=False, no_network=True, load_dtd=False, dtd_validation=False)
+    root = etree.fromstring(data, parser=parser)
     placemarks = root.findall(".//{*}Placemark")
 
     features = []
