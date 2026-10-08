@@ -9,6 +9,18 @@ WGS84_WKT = (
     'PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]]'
 )
 
+# UTM zone 43N (EPSG:32643) - a projected CRS, used to test the
+# "source already projected" branch where no reprojection should happen.
+UTM43N_WKT = (
+    'PROJCS["WGS 84 / UTM zone 43N",GEOGCS["WGS 84",DATUM["WGS_1984",'
+    'SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],'
+    'UNIT["degree",0.0174532925199433]],PROJECTION["Transverse_Mercator"],'
+    'PARAMETER["latitude_of_origin",0],PARAMETER["central_meridian",75],'
+    'PARAMETER["scale_factor",0.9996],PARAMETER["false_easting",500000],'
+    'PARAMETER["false_northing",0],UNIT["metre",1],'
+    'AUTHORITY["EPSG","32643"]]'
+)
+
 
 def make_shapefile_zip(
     shape_type=shapefile.POLYGON,
@@ -68,6 +80,26 @@ def make_polygon_shapefile_zip():
     return make_shapefile_zip(
         shape_type=shapefile.POLYGON,
         records=[(coords, ["plot1", 5])],
+    )
+
+
+def make_projected_polygon_shapefile_zip():
+    """A polygon already in UTM zone 43N meters (EPSG:32643), not lon/lat.
+
+    Used to exercise the "source already projected" path where processing
+    should skip reprojection and measure the coordinates as-is.
+    """
+    coords = [
+        (500000, 2000000),
+        (500000, 2000200),
+        (500200, 2000200),
+        (500200, 2000000),
+        (500000, 2000000),
+    ]
+    return make_shapefile_zip(
+        shape_type=shapefile.POLYGON,
+        records=[(coords, ["plot1", 5])],
+        prj_wkt=UTM43N_WKT,
     )
 
 

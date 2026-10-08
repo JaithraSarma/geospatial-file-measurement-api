@@ -1,6 +1,12 @@
 import io
 
-from tests.factories import make_kml_bytes, make_polygon_shapefile_zip
+import pytest
+
+from tests.factories import (
+    make_kml_bytes,
+    make_polygon_shapefile_zip,
+    make_projected_polygon_shapefile_zip,
+)
 
 
 def test_upload_shapefile_returns_completed(client):
@@ -51,6 +57,31 @@ def test_shapefile_measurements_reports_projected_area(client):
     assert feature["measurement_type"] == "area"
     # a 2x2 degree box reprojected to UTM meters is way more than 1000 m2
     assert feature["measurement_value"] > 1000
+    assert feature["geometry"] is not None
+    assert feature["geometry"]["type"] == "Polygon"
+    assert feature["source_crs"] == "EPSG:4326"
+
+
+def test_upload_already_projected_shapefile_skips_reprojection(client):
+    zip_bytes = make_projected_polygon_shapefile_zip()
+    upload = client.post(
+        "/api/files/",
+        files={"file": ("plot_utm.zip", io.BytesIO(zip_bytes), "application/zip")},
+    )
+    assert upload.status_code == 201
+    body = upload.json()
+    assert body["status"] == "COMPLETED"
+    assert body["crs"] == "EPSG:32643"
+    assert body["projected_crs"] == "EPSG:32643"
+    file_id = body["id"]
+
+    resp = client.get(f"/api/files/{file_id}/measurements/")
+    assert resp.status_code == 200
+    feature = resp.json()["features"][0]
+    assert feature["measurement_type"] == "area"
+    # 200m x 200m square -> 40000 m2, already in meters with no reprojection
+    assert feature["measurement_value"] == pytest.approx(40000, rel=1e-3)
+    assert feature["source_crs"] == "EPSG:32643"
 
 
 def test_upload_kml_has_area_length_and_none(client):

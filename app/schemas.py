@@ -22,6 +22,8 @@ class FeatureMeasurement(BaseModel):
 
     feature_index: int
     geometry_type: str
+    geometry: dict | None = None
+    source_crs: str | None = None
     measurement_type: str
     measurement_value: float | None = None
     measurement_unit: str | None = None

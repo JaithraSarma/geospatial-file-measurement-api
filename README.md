@@ -96,6 +96,8 @@ same shapefile upload above:
     {
       "feature_index": 0,
       "geometry_type": "Polygon",
+      "geometry": { "type": "Polygon", "coordinates": [[[-0.1377, 51.5068], [-0.1364, 51.5068], [-0.1364, 51.5076], [-0.1377, 51.5076], [-0.1377, 51.5068]]] },
+      "source_crs": "EPSG:4326",
       "measurement_type": "area",
       "measurement_value": 111269.5498,
       "measurement_unit": "m2",
@@ -105,6 +107,8 @@ same shapefile upload above:
     {
       "feature_index": 1,
       "geometry_type": "Polygon",
+      "geometry": { "type": "Polygon", "coordinates": [[[-0.1427, 51.5055], [-0.1411, 51.5055], [-0.1411, 51.5065], [-0.1427, 51.5065], [-0.1427, 51.5055]]] },
+      "source_crs": "EPSG:4326",
       "measurement_type": "area",
       "measurement_value": 115889.3022,
       "measurement_unit": "m2",
@@ -125,6 +129,8 @@ linestring) gives a mix of `area` and `length`:
     {
       "feature_index": 0,
       "geometry_type": "Polygon",
+      "geometry": { "type": "Polygon", "coordinates": [[[77.5913, 12.9763], [77.5967, 12.9763], [77.5967, 12.9800], [77.5913, 12.9800], [77.5913, 12.9763]]] },
+      "source_crs": "EPSG:4326",
       "measurement_type": "area",
       "measurement_value": 240335.6563,
       "measurement_unit": "m2",
@@ -134,6 +140,8 @@ linestring) gives a mix of `area` and `length`:
     {
       "feature_index": 1,
       "geometry_type": "LineString",
+      "geometry": { "type": "LineString", "coordinates": [[77.6033, 12.9752], [77.6101, 12.9718]] },
+      "source_crs": "EPSG:4326",
       "measurement_type": "length",
       "measurement_value": 911.5652,
       "measurement_unit": "m",
@@ -289,3 +297,7 @@ If I kept going, the things I'd add next:
   the polygon + linestring mix.
 - Pagination on `GET /api/files/` once there's enough files in the DB for
   that to matter.
+- KML `<MultiGeometry>` placemarks aren't fully handled - the parser finds
+  the first Point/LineString/Polygon under a placemark and stops there, so a
+  placemark with several geometries only gets the first one back instead of
+  all of them.

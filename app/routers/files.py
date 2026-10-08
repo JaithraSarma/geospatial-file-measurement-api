@@ -66,6 +66,8 @@ def get_measurements(file_id: str, db: Session = Depends(get_db)):
         FeatureMeasurement(
             feature_index=f.feature_index,
             geometry_type=f.geometry_type,
+            geometry=f.geometry_geojson,
+            source_crs=f.source_crs,
             measurement_type=f.measurement_type,
             measurement_value=f.measurement_value,
             measurement_unit=f.measurement_unit,
