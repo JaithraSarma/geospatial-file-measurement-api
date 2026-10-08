@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <name>Bangalore sample</name>
+    <Placemark>
+      <name>Cubbon Park (made up boundary)</name>
+      <Polygon>
+        <outerBoundaryIs>
+          <LinearRing>
+            <coordinates>
+              77.5920,12.9780,0 77.5970,12.9780,0 77.5970,12.9740,0 77.5920,12.9740,0 77.5920,12.9780,0
+            </coordinates>
+          </LinearRing>
+        </outerBoundaryIs>
+      </Polygon>
+    </Placemark>
+    <Placemark>
+      <name>MG Road (made up route)</name>
+      <LineString>
+        <coordinates>
+          77.6050,12.9760,0 77.6090,12.9748,0 77.6130,12.9735,0
+        </coordinates>
+      </LineString>
+    </Placemark>
+  </Document>
+</kml>
