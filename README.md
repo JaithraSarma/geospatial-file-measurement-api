@@ -30,7 +30,7 @@ To run the test suite:
 ./.venv/Scripts/python.exe -m pytest
 ```
 
-36 tests, covering the CRS/measurement math, both readers, and the API end to
+37 tests, covering the CRS/measurement math, both readers, and the API end to
 end (including a deliberately corrupted zip to check it fails gracefully
 instead of 500ing).
 
