@@ -1,0 +1,22 @@
+# python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+.pytest_cache/
+
+# local db / uploads
+*.db
+*.sqlite3
+uploads/
+data/db/
+
+# editor / os
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# the assignment brief itself
+*.docx
