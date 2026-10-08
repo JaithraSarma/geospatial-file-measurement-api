@@ -236,8 +236,8 @@ validation cover everything this assignment actually needs.
 in the whole project. I considered geopandas first since it would have made
 the readers almost trivial. But getting GDAL (which fiona and geopandas both
 sit on top of) to build cleanly on Windows with a recent Python turned into a
-rabbit hole of wheel mismatches, and the assignment brief specifically wants
-this done without those libraries anyway. Writing the shapefile and KML
+rabbit hole of wheel mismatches. The brief leaves the implementation up to
+you, so I took that as license to skip the heavy geo stack. Writing the shapefile and KML
 parsing by hand with pyshp and lxml took longer, but I came out the other
 side actually understanding the binary shapefile format and the KML schema
 instead of trusting a library to hand me clean geometries. Shapely still does
