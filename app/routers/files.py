@@ -28,8 +28,8 @@ def _to_file_info(row: FileModel) -> FileInfo:
 
 
 @router.post("/", response_model=FileInfo, status_code=201)
-async def upload_file(file: UploadFile = FormFile(...), db: Session = Depends(get_db)):
-    if not file.filename:
+async def upload_file(file: UploadFile | None = FormFile(None), db: Session = Depends(get_db)):
+    if file is None or not file.filename:
         raise HTTPException(status_code=400, detail="no file provided")
     if not file.filename.lower().endswith(SUPPORTED_EXTENSIONS):
         raise HTTPException(status_code=400, detail="unsupported file extension")

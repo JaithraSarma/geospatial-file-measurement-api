@@ -89,7 +89,7 @@ def test_upload_rejects_unsupported_extension(client):
 
 def test_upload_rejects_missing_file(client):
     resp = client.post("/api/files/")
-    assert resp.status_code in (400, 422)
+    assert resp.status_code == 400
 
 
 def test_get_unknown_file_returns_404(client):
