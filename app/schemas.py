@@ -26,6 +26,7 @@ class FeatureMeasurement(BaseModel):
     measurement_value: float | None = None
     measurement_unit: str | None = None
     note: str | None = None
+    properties: dict = {}
 
 
 class MeasurementsResponse(BaseModel):
